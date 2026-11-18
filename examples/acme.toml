@@ -1,0 +1,111 @@
+# A company with a head office and two branches.
+#
+#   subnetplan plan examples/acme.toml
+#   subnetplan build examples/acme.toml --out examples/acme
+
+name = "acme"
+
+# Everything is carved out of this block.
+block = "10.20.0.0/21"
+
+domain = "acme.example"
+dns_servers = ["9.9.9.9"]
+
+# Untagged VLAN on trunks. It carries no hosts.
+native_vlan = 999
+
+# --- head office -------------------------------------------------------------
+
+[[sites]]
+name = "hq"
+
+# This site connects to the provider and does NAT for all sites.
+[sites.internet]
+interface = "GigabitEthernet0/2"
+address = "203.0.113.2/30"
+gateway = "203.0.113.1"
+
+[[sites.vlans]]
+id = 10
+name = "staff"
+hosts = 180
+ports = 12
+port_security = 2
+
+[[sites.vlans]]
+id = 20
+name = "engineering"
+hosts = 90
+ports = 4
+
+[[sites.vlans]]
+id = 30
+name = "servers"
+hosts = 20
+dhcp = false
+ports = 4
+
+[[sites.vlans]]
+id = 99
+name = "management"
+hosts = 5
+dhcp = false
+management = true
+ports = 1
+
+# --- branches ----------------------------------------------------------------
+
+[[sites]]
+name = "north"
+
+[[sites.vlans]]
+id = 10
+name = "staff"
+hosts = 50
+ports = 16
+port_security = 2
+
+[[sites.vlans]]
+id = 40
+name = "guests"
+hosts = 25
+ports = 4
+port_security = 1
+
+[[sites.vlans]]
+id = 99
+name = "management"
+hosts = 5
+dhcp = false
+management = true
+ports = 1
+
+[[sites]]
+name = "south"
+
+[[sites.vlans]]
+id = 10
+name = "staff"
+hosts = 28
+ports = 20
+port_security = 2
+
+[[sites.vlans]]
+id = 99
+name = "management"
+hosts = 5
+dhcp = false
+management = true
+ports = 1
+
+# --- WAN ---------------------------------------------------------------------
+# A triangle: every site stays reachable if any one link fails.
+
+[[links]]
+sites = ["hq", "north"]
+
+[[links]]
+sites = ["hq", "south"]
+
+[[links]]
+sites = ["north", "south"]
