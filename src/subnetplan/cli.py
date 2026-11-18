@@ -7,6 +7,11 @@ import sys
 
 from subnetplan import __version__
 from subnetplan.calc import SubnetError, address_type, describe, legacy_class, split_binary
+from subnetplan.loader import ConfigError, load
+from subnetplan.plan import Plan, build_plan
+from subnetplan.report import render_plan
+from subnetplan.validate import validate
+from subnetplan.vlsm import AllocationError
 
 
 def _explain(args: argparse.Namespace) -> int:
@@ -42,6 +47,15 @@ def _explain(args: argparse.Namespace) -> int:
     return 0
 
 
+def _load_plan(path: str) -> Plan:
+    return build_plan(validate(load(path)))
+
+
+def _plan(args: argparse.Namespace) -> int:
+    sys.stdout.write(render_plan(_load_plan(args.file)))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="subnetplan",
@@ -59,6 +73,10 @@ def build_parser() -> argparse.ArgumentParser:
     explain.add_argument("address", nargs="+", metavar="ADDRESS")
     explain.set_defaults(run=_explain)
 
+    plan = commands.add_parser("plan", help="print the addressing plan for a network file")
+    plan.add_argument("file", metavar="FILE")
+    plan.set_defaults(run=_plan)
+
     return parser
 
 
@@ -67,5 +85,13 @@ def main(argv: list[str] | None = None) -> int:
     try:
         return args.run(args)
     except SubnetError as error:
+        print(f"subnetplan: {error}", file=sys.stderr)
+        return 2
+    except ConfigError as error:
+        print(f"subnetplan: {len(error.problems)} problem(s) in the network file:", file=sys.stderr)
+        for problem in error.problems:
+            print(f"  - {problem}", file=sys.stderr)
+        return 2
+    except AllocationError as error:
         print(f"subnetplan: {error}", file=sys.stderr)
         return 2
