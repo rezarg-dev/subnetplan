@@ -7,11 +7,19 @@ import sys
 
 from subnetplan import __version__
 from subnetplan.calc import SubnetError, address_type, describe, legacy_class, split_binary
+from subnetplan.export import to_csv, to_json, to_markdown
 from subnetplan.loader import ConfigError, load
 from subnetplan.plan import Plan, build_plan
 from subnetplan.report import render_plan
 from subnetplan.validate import validate
 from subnetplan.vlsm import AllocationError
+
+_FORMATS = {
+    "table": render_plan,
+    "markdown": to_markdown,
+    "json": to_json,
+    "csv": to_csv,
+}
 
 
 def _explain(args: argparse.Namespace) -> int:
@@ -52,7 +60,7 @@ def _load_plan(path: str) -> Plan:
 
 
 def _plan(args: argparse.Namespace) -> int:
-    sys.stdout.write(render_plan(_load_plan(args.file)))
+    sys.stdout.write(_FORMATS[args.format](_load_plan(args.file)))
     return 0
 
 
@@ -75,6 +83,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     plan = commands.add_parser("plan", help="print the addressing plan for a network file")
     plan.add_argument("file", metavar="FILE")
+    plan.add_argument(
+        "--format", choices=sorted(_FORMATS), default="table", help="output format (default: table)"
+    )
     plan.set_defaults(run=_plan)
 
     return parser
