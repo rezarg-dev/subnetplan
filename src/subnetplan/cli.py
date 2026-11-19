@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -13,6 +14,7 @@ from subnetplan.ios.device import render_all
 from subnetplan.loader import ConfigError, load
 from subnetplan.plan import Plan, build_plan
 from subnetplan.report import render_plan
+from subnetplan.topology import to_topology
 from subnetplan.validate import validate
 from subnetplan.verify import render_checklist
 from subnetplan.vlsm import AllocationError
@@ -76,6 +78,7 @@ def _build(args: argparse.Namespace) -> int:
     files["plan.md"] = to_markdown(plan)
     files["plan.json"] = to_json(plan)
     files["VERIFY.md"] = render_checklist(plan)
+    files["topology.json"] = json.dumps(to_topology(plan), indent=2) + "\n"
 
     for name, content in sorted(files.items()):
         (out / name).write_text(content, encoding="utf-8")
