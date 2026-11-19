@@ -1,0 +1,215 @@
+{
+  "name": "acme",
+  "block": "10.20.0.0/21",
+  "sites": [
+    {
+      "name": "hq",
+      "summary": "10.20.0.0/23",
+      "router": {
+        "hostname": "HQ-R1",
+        "router_id": "1.1.1.1"
+      },
+      "switch": {
+        "hostname": "HQ-SW1",
+        "management_address": "10.20.1.162"
+      },
+      "vlans": [
+        {
+          "id": 10,
+          "name": "staff",
+          "hosts": 180,
+          "network": "10.20.0.0/24",
+          "netmask": "255.255.255.0",
+          "gateway": "10.20.0.1",
+          "usable": 254,
+          "dhcp_range": [
+            "10.20.0.2",
+            "10.20.0.254"
+          ]
+        },
+        {
+          "id": 20,
+          "name": "engineering",
+          "hosts": 90,
+          "network": "10.20.1.0/25",
+          "netmask": "255.255.255.128",
+          "gateway": "10.20.1.1",
+          "usable": 126,
+          "dhcp_range": [
+            "10.20.1.2",
+            "10.20.1.126"
+          ]
+        },
+        {
+          "id": 30,
+          "name": "servers",
+          "hosts": 20,
+          "network": "10.20.1.128/27",
+          "netmask": "255.255.255.224",
+          "gateway": "10.20.1.129",
+          "usable": 30,
+          "dhcp_range": null
+        },
+        {
+          "id": 99,
+          "name": "management",
+          "hosts": 5,
+          "network": "10.20.1.160/28",
+          "netmask": "255.255.255.240",
+          "gateway": "10.20.1.161",
+          "usable": 14,
+          "dhcp_range": null
+        }
+      ]
+    },
+    {
+      "name": "north",
+      "summary": "10.20.2.0/25",
+      "router": {
+        "hostname": "NORTH-R1",
+        "router_id": "2.2.2.2"
+      },
+      "switch": {
+        "hostname": "NORTH-SW1",
+        "management_address": "10.20.2.98"
+      },
+      "vlans": [
+        {
+          "id": 10,
+          "name": "staff",
+          "hosts": 50,
+          "network": "10.20.2.0/26",
+          "netmask": "255.255.255.192",
+          "gateway": "10.20.2.1",
+          "usable": 62,
+          "dhcp_range": [
+            "10.20.2.2",
+            "10.20.2.62"
+          ]
+        },
+        {
+          "id": 40,
+          "name": "guests",
+          "hosts": 25,
+          "network": "10.20.2.64/27",
+          "netmask": "255.255.255.224",
+          "gateway": "10.20.2.65",
+          "usable": 30,
+          "dhcp_range": [
+            "10.20.2.66",
+            "10.20.2.94"
+          ]
+        },
+        {
+          "id": 99,
+          "name": "management",
+          "hosts": 5,
+          "network": "10.20.2.96/28",
+          "netmask": "255.255.255.240",
+          "gateway": "10.20.2.97",
+          "usable": 14,
+          "dhcp_range": null
+        }
+      ]
+    },
+    {
+      "name": "south",
+      "summary": "10.20.2.128/26",
+      "router": {
+        "hostname": "SOUTH-R1",
+        "router_id": "3.3.3.3"
+      },
+      "switch": {
+        "hostname": "SOUTH-SW1",
+        "management_address": "10.20.2.162"
+      },
+      "vlans": [
+        {
+          "id": 10,
+          "name": "staff",
+          "hosts": 28,
+          "network": "10.20.2.128/27",
+          "netmask": "255.255.255.224",
+          "gateway": "10.20.2.129",
+          "usable": 30,
+          "dhcp_range": [
+            "10.20.2.130",
+            "10.20.2.158"
+          ]
+        },
+        {
+          "id": 99,
+          "name": "management",
+          "hosts": 5,
+          "network": "10.20.2.160/28",
+          "netmask": "255.255.255.240",
+          "gateway": "10.20.2.161",
+          "usable": 14,
+          "dhcp_range": null
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "network": "10.20.2.192/30",
+      "ends": [
+        {
+          "site": "hq",
+          "router": "HQ-R1",
+          "interface": "GigabitEthernet0/1",
+          "address": "10.20.2.193"
+        },
+        {
+          "site": "north",
+          "router": "NORTH-R1",
+          "interface": "GigabitEthernet0/1",
+          "address": "10.20.2.194"
+        }
+      ]
+    },
+    {
+      "network": "10.20.2.196/30",
+      "ends": [
+        {
+          "site": "hq",
+          "router": "HQ-R1",
+          "interface": "Serial0/0/0",
+          "address": "10.20.2.197"
+        },
+        {
+          "site": "south",
+          "router": "SOUTH-R1",
+          "interface": "GigabitEthernet0/1",
+          "address": "10.20.2.198"
+        }
+      ]
+    },
+    {
+      "network": "10.20.2.200/30",
+      "ends": [
+        {
+          "site": "north",
+          "router": "NORTH-R1",
+          "interface": "GigabitEthernet0/2",
+          "address": "10.20.2.201"
+        },
+        {
+          "site": "south",
+          "router": "SOUTH-R1",
+          "interface": "GigabitEthernet0/2",
+          "address": "10.20.2.202"
+        }
+      ]
+    }
+  ],
+  "wan_block": "10.20.2.192/28",
+  "free": [
+    "10.20.2.208/28",
+    "10.20.2.224/27",
+    "10.20.3.0/24",
+    "10.20.4.0/22"
+  ],
+  "hosts_requested": 408,
+  "addresses_allocated": 720
+}
