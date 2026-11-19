@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
 from subnetplan import __version__
 from subnetplan.calc import SubnetError, address_type, describe, legacy_class, split_binary
 from subnetplan.export import to_csv, to_json, to_markdown
+from subnetplan.ios.device import render_all
 from subnetplan.loader import ConfigError, load
 from subnetplan.plan import Plan, build_plan
 from subnetplan.report import render_plan
@@ -64,6 +66,21 @@ def _plan(args: argparse.Namespace) -> int:
     return 0
 
 
+def _build(args: argparse.Namespace) -> int:
+    plan = _load_plan(args.file)
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+
+    files = render_all(plan)
+    files["plan.md"] = to_markdown(plan)
+    files["plan.json"] = to_json(plan)
+
+    for name, content in sorted(files.items()):
+        (out / name).write_text(content, encoding="utf-8")
+        print(f"wrote {out / name}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="subnetplan",
@@ -87,6 +104,13 @@ def build_parser() -> argparse.ArgumentParser:
         "--format", choices=sorted(_FORMATS), default="table", help="output format (default: table)"
     )
     plan.set_defaults(run=_plan)
+
+    build = commands.add_parser(
+        "build", help="write the device configurations and the plan to a directory"
+    )
+    build.add_argument("file", metavar="FILE")
+    build.add_argument("--out", "-o", default="build", metavar="DIR", help="default: build")
+    build.set_defaults(run=_build)
 
     return parser
 
