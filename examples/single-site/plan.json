@@ -1,0 +1,63 @@
+{
+  "name": "single-site",
+  "block": "192.168.10.0/24",
+  "sites": [
+    {
+      "name": "office",
+      "summary": "192.168.10.0/25",
+      "router": {
+        "hostname": "OFFICE-R1",
+        "router_id": "1.1.1.1"
+      },
+      "switch": {
+        "hostname": "OFFICE-SW1",
+        "management_address": null
+      },
+      "vlans": [
+        {
+          "id": 10,
+          "name": "staff",
+          "hosts": 40,
+          "network": "192.168.10.0/26",
+          "netmask": "255.255.255.192",
+          "gateway": "192.168.10.1",
+          "usable": 62,
+          "dhcp_range": [
+            "192.168.10.2",
+            "192.168.10.62"
+          ]
+        },
+        {
+          "id": 20,
+          "name": "printers",
+          "hosts": 6,
+          "network": "192.168.10.96/28",
+          "netmask": "255.255.255.240",
+          "gateway": "192.168.10.97",
+          "usable": 14,
+          "dhcp_range": null
+        },
+        {
+          "id": 30,
+          "name": "guests",
+          "hosts": 20,
+          "network": "192.168.10.64/27",
+          "netmask": "255.255.255.224",
+          "gateway": "192.168.10.65",
+          "usable": 30,
+          "dhcp_range": [
+            "192.168.10.66",
+            "192.168.10.94"
+          ]
+        }
+      ]
+    }
+  ],
+  "links": [],
+  "wan_block": null,
+  "free": [
+    "192.168.10.128/25"
+  ],
+  "hosts_requested": 66,
+  "addresses_allocated": 128
+}

@@ -1,0 +1,35 @@
+# The smallest useful network: one office behind one router.
+# No WAN links, so no OSPF is configured.
+
+name = "single-site"
+block = "192.168.10.0/24"
+domain = "office.example"
+dns_servers = ["9.9.9.9"]
+
+[[sites]]
+name = "office"
+
+[sites.internet]
+interface = "GigabitEthernet0/1"
+address = "198.51.100.6/30"
+gateway = "198.51.100.5"
+
+[[sites.vlans]]
+id = 10
+name = "staff"
+hosts = 40
+ports = 16
+
+[[sites.vlans]]
+id = 20
+name = "printers"
+hosts = 6
+dhcp = false
+ports = 4
+
+[[sites.vlans]]
+id = 30
+name = "guests"
+hosts = 20
+ports = 4
+port_security = 1
