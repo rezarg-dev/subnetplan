@@ -86,6 +86,16 @@ def _build(args: argparse.Namespace) -> int:
     return 0
 
 
+def _check(args: argparse.Namespace) -> int:
+    plan = _load_plan(args.file)
+    devices = 2 * len(plan.sites)
+    print(
+        f"{args.file}: ok ({len(plan.sites)} sites, {devices} devices, "
+        f"{sum(len(site.vlans) for site in plan.sites)} VLANs, {len(plan.links)} WAN links)"
+    )
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="subnetplan",
@@ -116,6 +126,10 @@ def build_parser() -> argparse.ArgumentParser:
     build.add_argument("file", metavar="FILE")
     build.add_argument("--out", "-o", default="build", metavar="DIR", help="default: build")
     build.set_defaults(run=_build)
+
+    check = commands.add_parser("check", help="validate a network file without writing anything")
+    check.add_argument("file", metavar="FILE")
+    check.set_defaults(run=_check)
 
     return parser
 
