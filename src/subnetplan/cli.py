@@ -14,6 +14,7 @@ from subnetplan.loader import ConfigError, load
 from subnetplan.plan import Plan, build_plan
 from subnetplan.report import render_plan
 from subnetplan.validate import validate
+from subnetplan.verify import render_checklist
 from subnetplan.vlsm import AllocationError
 
 _FORMATS = {
@@ -74,6 +75,7 @@ def _build(args: argparse.Namespace) -> int:
     files = render_all(plan)
     files["plan.md"] = to_markdown(plan)
     files["plan.json"] = to_json(plan)
+    files["VERIFY.md"] = render_checklist(plan)
 
     for name, content in sorted(files.items()):
         (out / name).write_text(content, encoding="utf-8")
