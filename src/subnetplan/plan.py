@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from ipaddress import IPv4Address, IPv4Network
 
 from subnetplan.calc import usable_hosts
+from subnetplan.interfaces import assign_link_interfaces
 from subnetplan.model import Link, Network, Site, Vlan
 from subnetplan.vlsm import Request, allocate, free_blocks, place, smallest_block_prefix
 
@@ -122,17 +123,15 @@ def _plan_site(site: Site, block: IPv4Network, index: int) -> SitePlan:
 
 
 def _plan_links(network: Network, wan_block: IPv4Network) -> list[LinkPlan]:
-    # Interfaces are handed out per router in the order the links are listed.
-    free = {}
-    for site in network.sites:
-        uplink = site.internet.interface if site.internet else None
-        free[site.name] = [name for name in network.hardware.router_wan if name != uplink]
-
+    interfaces = assign_link_interfaces(network)
     subnets = wan_block.subnets(new_prefix=_LINK_PREFIX)
+
     plans = []
-    for link, subnet in zip(network.links, subnets, strict=False):
-        end_a = LinkEnd(network.site(link.a), free[link.a].pop(0), subnet[1])
-        end_b = LinkEnd(network.site(link.b), free[link.b].pop(0), subnet[2])
+    for link, (interface_a, interface_b), subnet in zip(
+        network.links, interfaces, subnets, strict=False
+    ):
+        end_a = LinkEnd(network.site(link.a), interface_a, subnet[1])
+        end_b = LinkEnd(network.site(link.b), interface_b, subnet[2])
         plans.append(LinkPlan(link, subnet, end_a, end_b))
     return plans
 

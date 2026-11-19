@@ -86,8 +86,8 @@
 
 - `show ip interface brief`
   - `Gi0/0.10`, `Gi0/0.99` are `up/up` with the gateway addresses from the plan.
-  - `Gi0/1` is `up/up` with 10.20.2.198.
-  - `Gi0/2` is `up/up` with 10.20.2.202.
+  - `Se0/0/0` is `up/up` with 10.20.2.198.
+  - `Gi0/1` is `up/up` with 10.20.2.202.
 - `show ip dhcp pool`
   - Pools `STAFF` exist.
 - `show ip dhcp binding` after a client has been connected

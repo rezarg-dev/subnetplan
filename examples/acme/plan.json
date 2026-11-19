@@ -180,7 +180,7 @@
         {
           "site": "south",
           "router": "SOUTH-R1",
-          "interface": "GigabitEthernet0/1",
+          "interface": "Serial0/0/0",
           "address": "10.20.2.198"
         }
       ]
@@ -197,7 +197,7 @@
         {
           "site": "south",
           "router": "SOUTH-R1",
-          "interface": "GigabitEthernet0/2",
+          "interface": "GigabitEthernet0/1",
           "address": "10.20.2.202"
         }
       ]

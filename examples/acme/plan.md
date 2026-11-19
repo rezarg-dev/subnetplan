@@ -39,8 +39,8 @@ Taken from `10.20.2.192/28`.
 | Link | Subnet | Side A | Side B |
 | --- | --- | --- | --- |
 | hq to north | `10.20.2.192/30` | HQ-R1 GigabitEthernet0/1 10.20.2.193 | NORTH-R1 GigabitEthernet0/1 10.20.2.194 |
-| hq to south | `10.20.2.196/30` | HQ-R1 Serial0/0/0 10.20.2.197 | SOUTH-R1 GigabitEthernet0/1 10.20.2.198 |
-| north to south | `10.20.2.200/30` | NORTH-R1 GigabitEthernet0/2 10.20.2.201 | SOUTH-R1 GigabitEthernet0/2 10.20.2.202 |
+| hq to south | `10.20.2.196/30` | HQ-R1 Serial0/0/0 10.20.2.197 | SOUTH-R1 Serial0/0/0 10.20.2.198 |
+| north to south | `10.20.2.200/30` | NORTH-R1 GigabitEthernet0/2 10.20.2.201 | SOUTH-R1 GigabitEthernet0/1 10.20.2.202 |
 
 ## Free space
 

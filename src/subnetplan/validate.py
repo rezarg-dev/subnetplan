@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 
+from subnetplan.interfaces import InterfaceError, assign_link_interfaces
 from subnetplan.loader import ConfigError
 from subnetplan.model import Network, Site
 
@@ -96,16 +97,10 @@ def _check_links(network: Network, problems: list[str]) -> None:
     if any(problem.startswith("links[") for problem in problems):
         return
 
-    # Every router needs one free WAN interface per link.
-    for index, site in enumerate(network.sites):
-        degree = sum(1 for link in network.links if site.name in (link.a, link.b))
-        uplink = site.internet.interface if site.internet else None
-        available = [name for name in network.hardware.router_wan if name != uplink]
-        if degree > len(available):
-            problems.append(
-                f"sites[{index}]: {site.name} has {degree} WAN links but its router has "
-                f"only {len(available)} interfaces left for them"
-            )
+    try:
+        assign_link_interfaces(network)
+    except InterfaceError as error:
+        problems.append(f"links: {error}")
 
     # Walk the links from the first site. A site that is never reached is
     # cut off from the rest of the network.
