@@ -43,6 +43,21 @@ Summary
   Addresses allocated  720 of 2048 (35%)
   Free blocks          10.20.2.208/28, 10.20.2.224/27, 10.20.3.0/24, 10.20.4.0/22
 ```
+---
+
+## Support the Project
+
+If subnetplan has been useful to you, you can support its development:
+
+| Network | Address |
+| :---: | :---: |
+| **USDT (BEP20)** | `0x8F540B43cC82d765bfe33c7B3da042B11708eCD1` |
+| **USDT (TRC20)** | `TGHxjiBeBkdJ7v2Vc4gqE9FYp7Nj1sgDkJ` |
+| **Litecoin (LTC)** | `ltc1q28g9qzpjs22x2uvds5tqp60w250fvjf2te234l` |
+
+Every contribution, no matter the size, helps keep this project alive. ❤️
+
+---
 
 ## Why
 
